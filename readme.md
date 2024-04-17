@@ -9,6 +9,15 @@ This project requires Python 3.7 or later. Dependencies are listed in the `requi
 ```bash
 pip install -r requirements.txt
 ```
+
+## Environment variables
+Configure the app with the following environment optional environment variables (the defaults are set to work with the local development environment):
+```bash
+BOT_USERNAME             # username (email) to use on Open Library.
+BOT_PASSWORD             # password for the above.
+OL_HOST                  # the URL and port if necessary for Open Library.
+```
+
 ## Command Line Interface (CLI) Usage
 
 ### Fetching Books from OpenAlex
