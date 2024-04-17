@@ -1,10 +1,12 @@
 import json
 import os
 
+from collections import namedtuple
+from pathlib import Path
 from typing import Final
 
 from olclient.openlibrary import OpenLibrary
-from collections import namedtuple
+from requests import JSONDecodeError
 
 BOT_USERNAME: Final = os.getenv("BOT_USERNAME", "openlibrary@example.com")
 BOT_PASSWORD: Final = os.getenv("BOT_PASSWORD", "admin123")
@@ -22,16 +24,21 @@ def add_identifiers(isbn_dict):
     
     ol = OpenLibrary(base_url=OL_HOST, credentials=credentials)
 
-    for isbn , id in isbn_dict.items():
-        record = ol.session.get(f"{OL_HOST}/isbn/{isbn}.json")
-        record = record.json()
+    for isbn, id in isbn_dict.items():
+        record = ol.session.get(f"{OL_HOST}/isbn/{isbn}.json?high_priority=true")
+        try:
+            record = record.json()
+        except JSONDecodeError:
+            continue
+
         key = record.get("key").split("/")[-1]
-        edition = ol.Edition.get(key)
-        edition.add_id("OpenAlex",id)
-        print(edition.identifiers)
-        edition.save("edit adds an OpenAlex identifier.")
+        if not (edition := ol.Edition.get(key)):
+            continue
+
+        if "open_alex" not in edition.identifiers:
+            edition.add_id("open_alex", id)
+            edition.save("Add an OpenAlex identifier.")
 
 def main(filename):
-    print("reached main")
     isbn_dict = import_isbns(filename) # Hits.jsonl/Not_Found.jsonl
     add_identifiers(isbn_dict)
