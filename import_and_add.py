@@ -11,6 +11,7 @@ from requests import JSONDecodeError
 BOT_USERNAME: Final = os.getenv("BOT_USERNAME", "openlibrary@example.com")
 BOT_PASSWORD: Final = os.getenv("BOT_PASSWORD", "admin123")
 OL_HOST: Final = os.getenv("OL_HOST", "http://localhost:8080")
+ISBN_ENDPOINT_MISS_FILE: Final = os.getenv("ISBN_ENDPOINT_MISS_FILE")
 
 Credentials = namedtuple("Credentials", ["username", "password"])
 credentials = Credentials(BOT_USERNAME, BOT_PASSWORD)
@@ -29,6 +30,9 @@ def add_identifiers(isbn_dict):
         try:
             record = record.json()
         except JSONDecodeError:
+            if ISBN_ENDPOINT_MISS_FILE:
+                with Path(ISBN_ENDPOINT_MISS_FILE).open("a") as file:
+                    file.write(json.dumps({"ISBN": isbn, "OpenAlex": id})+"\n")
             continue
 
         key = record.get("key").split("/")[-1]

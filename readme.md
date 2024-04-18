@@ -16,6 +16,7 @@ Configure the app with the following environment optional environment variables 
 BOT_USERNAME             # username (email) to use on Open Library.
 BOT_PASSWORD             # password for the above.
 OL_HOST                  # the URL and port if necessary for Open Library.
+ISBN_ENDPOINT_MISS_FILE  # an optional file to store a record of any imports that failed on the `/isbn` endpoint.
 ```
 
 ## Command Line Interface (CLI) Usage
