@@ -1,7 +1,7 @@
 import argparse
 from OpenAlex import fetch_books
 from using_ol_dump.find import find_isbns
-from import_and_add import main
+from import_and_add import do_import
 
 
 if __name__ == "__main__":
@@ -15,6 +15,7 @@ if __name__ == "__main__":
     parser.add_argument('--found_file', type=str, default='using_ol_dump/Hits.jsonl', help='Output file to write found ISBNs')
     parser.add_argument('--not_found_file', type=str, default='using_ol_dump/Not_Found.jsonl', help='File to write ISBNs that were not found')
     
+    parser.add_argument('--import_from_isbns', action='store_true', help='Add OpenAlex identifiers')
     parser.add_argument('--add_identifier', action='store_true', help='Add OpenAlex identifiers')
     parser.add_argument('--filename', type=str, default='using_ol_dump/Not_Found.jsonl', help='relative path of file with ISBNs and OpenAlex identifiers')
  
@@ -26,5 +27,5 @@ if __name__ == "__main__":
     if args.find_isbns:
         find_isbns(args.dump_file, args.found_file, args.not_found_file)
 
-    if args.add_identifier:
-        main(args.filename)
+    if args.import_from_isbns:
+        do_import(args.filename)
